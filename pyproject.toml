@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "todo-cli"
+version = "0.1.0"
+description = "A terminal-based todo list with vim-style navigation"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "typer[all]>=0.9.0",
+    "textual>=0.45.0",
+]
+
+[project.scripts]
+todo = "todo.main:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["todo"]
+

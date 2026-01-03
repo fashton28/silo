@@ -66,11 +66,26 @@ class TodoApp(App):
         # Focus the table
         self.query_one(TaskTable).focus()
     
-    def refresh_tasks(self) -> None:
-        """Reload and display tasks from storage."""
-        tasks = storage.load_tasks()
+    def refresh_tasks(self, row_offset: int = 0) -> None:
+        """Reload and display tasks from storage, preserving cursor position.
+        
+        Args:
+            row_offset: Adjust cursor position by this amount (for move operations)
+        """
         table = self.query_one(TaskTable)
+        
+        # Save current cursor row and calculate target
+        current_row = table.cursor_row if table.row_count > 0 else 0
+        target_row = current_row + row_offset
+        
+        # Reload tasks
+        tasks = storage.load_tasks()
         table.populate(tasks)
+        
+        # Restore cursor position (clamped to valid range)
+        if table.row_count > 0:
+            target_row = max(0, min(target_row, table.row_count - 1))
+            table.move_cursor(row=target_row)
     
     def on_key(self, event: events.Key) -> None:
         """Handle keyboard input for vim-style navigation."""
@@ -89,6 +104,22 @@ class TodoApp(App):
         
         elif key == "k" or key == "up":
             table.action_cursor_up()
+            self.last_key = None
+        
+        # Move task down (Shift+J)
+        elif key == "J":
+            task_id = table.get_selected_task_id()
+            if task_id is not None:
+                if storage.move_task_down(task_id):
+                    self.refresh_tasks(row_offset=1)  # Follow task down
+            self.last_key = None
+        
+        # Move task up (Shift+K)
+        elif key == "K":
+            task_id = table.get_selected_task_id()
+            if task_id is not None:
+                if storage.move_task_up(task_id):
+                    self.refresh_tasks(row_offset=-1)  # Follow task up
             self.last_key = None
         
         # Toggle completion

@@ -105,6 +105,34 @@ def cycle_task_priority(task_id: int) -> bool:
     return False
 
 
+def move_task_up(task_id: int) -> bool:
+    """Move a task up in the list. Returns True if moved."""
+    tasks = load_tasks()
+    
+    for i, task in enumerate(tasks):
+        if task.id == task_id:
+            if i > 0:  # Can only move up if not already at top
+                tasks[i], tasks[i - 1] = tasks[i - 1], tasks[i]
+                save_tasks(tasks)
+                return True
+            return False
+    return False
+
+
+def move_task_down(task_id: int) -> bool:
+    """Move a task down in the list. Returns True if moved."""
+    tasks = load_tasks()
+    
+    for i, task in enumerate(tasks):
+        if task.id == task_id:
+            if i < len(tasks) - 1:  # Can only move down if not already at bottom
+                tasks[i], tasks[i + 1] = tasks[i + 1], tasks[i]
+                save_tasks(tasks)
+                return True
+            return False
+    return False
+
+
 def clear_completed() -> int:
     """Remove all completed tasks and archive them to history. Returns number of tasks archived."""
     tasks = load_tasks()

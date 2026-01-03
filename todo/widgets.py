@@ -145,6 +145,7 @@ class HelpBar(Static):
         
         commands = [
             ("j/k", "navigate"),
+            ("J/K", "move"),
             ("x", "toggle"),
             ("p", "priority"),
             ("a", "add"),

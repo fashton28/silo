@@ -93,6 +93,18 @@ def update_task_title(task_id: int, new_title: str) -> bool:
     return False
 
 
+def cycle_task_priority(task_id: int) -> bool:
+    """Cycle a task's priority. Returns True if task was found."""
+    tasks = load_tasks()
+    
+    for task in tasks:
+        if task.id == task_id:
+            task.cycle_priority()
+            save_tasks(tasks)
+            return True
+    return False
+
+
 def clear_completed() -> int:
     """Remove all completed tasks and archive them to history. Returns number of tasks archived."""
     tasks = load_tasks()

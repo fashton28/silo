@@ -99,6 +99,14 @@ class TodoApp(App):
                 self.refresh_tasks()
             self.last_key = None
         
+        # Cycle priority
+        elif key == "p":
+            task_id = table.get_selected_task_id()
+            if task_id is not None:
+                storage.cycle_task_priority(task_id)
+                self.refresh_tasks()
+            self.last_key = None
+        
         # Add new task
         elif key == "a":
             self.show_input("add")

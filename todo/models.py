@@ -15,6 +15,7 @@ class Task:
     status: str = "pending"  # "pending" or "completed"
     created_at: str = field(default_factory=lambda: datetime.now().isoformat())
     completed_at: Optional[str] = None
+    priority: Optional[str] = None  # "high", "medium", "low", or None
     
     def toggle(self) -> None:
         """Toggle task between pending and completed."""
@@ -29,6 +30,13 @@ class Task:
         """Check if task is completed."""
         return self.status == "completed"
     
+    def cycle_priority(self) -> None:
+        """Cycle through priority levels: None -> Low -> Medium -> High -> None."""
+        cycle = [None, "low", "medium", "high"]
+        current_index = cycle.index(self.priority) if self.priority in cycle else 0
+        next_index = (current_index + 1) % len(cycle)
+        self.priority = cycle[next_index]
+    
     def to_dict(self) -> dict:
         """Convert task to dictionary for JSON serialization."""
         return asdict(self)
@@ -42,6 +50,7 @@ class Task:
             status=data.get("status", "pending"),
             created_at=data.get("created_at", datetime.now().isoformat()),
             completed_at=data.get("completed_at"),
+            priority=data.get("priority"),
         )
     
     def formatted_date(self) -> str:

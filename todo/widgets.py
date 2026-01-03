@@ -65,7 +65,8 @@ class TaskTable(DataTable):
     def on_mount(self) -> None:
         """Set up columns when widget is mounted."""
         self.add_column("✓", width=5, key="check")
-        self.add_column("Title", width=60, key="title")
+        self.add_column("Title", width=50, key="title")
+        self.add_column("Priority", width=10, key="priority")
         self.add_column("Status", width=12, key="status")
         self.add_column("Created", width=10, key="created")
     
@@ -76,10 +77,11 @@ class TaskTable(DataTable):
         for task in tasks:
             checkbox = self._format_checkbox(task)
             title = self._format_title(task)
+            priority = self._format_priority(task)
             status = self._format_status(task)
             created = self._format_created(task)
             
-            self.add_row(checkbox, title, status, created, key=str(task.id))
+            self.add_row(checkbox, title, priority, status, created, key=str(task.id))
     
     def _format_checkbox(self, task: Task) -> Text:
         """Format the checkbox column."""
@@ -92,6 +94,16 @@ class TaskTable(DataTable):
         if task.is_completed():
             return Text(task.title, style="dim strike")
         return Text(task.title)
+    
+    def _format_priority(self, task: Task) -> Text:
+        """Format the priority column with colors."""
+        if task.priority == "high":
+            return Text("High", style="bold red")
+        elif task.priority == "medium":
+            return Text("Medium", style="bold yellow")
+        elif task.priority == "low":
+            return Text("Low", style="dim")
+        return Text("-", style="dim")
     
     def _format_status(self, task: Task) -> Text:
         """Format the status column with colors."""
@@ -134,6 +146,7 @@ class HelpBar(Static):
         commands = [
             ("j/k", "navigate"),
             ("x", "toggle"),
+            ("p", "priority"),
             ("a", "add"),
             ("e", "edit"),
             ("dd", "delete"),

@@ -10,6 +10,7 @@ from .models import Task
 # Default storage location
 DEFAULT_TODO_DIR = Path.home() / ".todo"
 DEFAULT_TASKS_FILE = DEFAULT_TODO_DIR / "tasks.json"
+DEFAULT_HISTORY_FILE = DEFAULT_TODO_DIR / "history.json"
 
 
 def ensure_storage_exists() -> None:
@@ -17,6 +18,8 @@ def ensure_storage_exists() -> None:
     DEFAULT_TODO_DIR.mkdir(parents=True, exist_ok=True)
     if not DEFAULT_TASKS_FILE.exists():
         DEFAULT_TASKS_FILE.write_text("[]")
+    if not DEFAULT_HISTORY_FILE.exists():
+        DEFAULT_HISTORY_FILE.write_text("[]")
 
 
 def load_tasks() -> List[Task]:
@@ -91,10 +94,46 @@ def update_task_title(task_id: int, new_title: str) -> bool:
 
 
 def clear_completed() -> int:
-    """Remove all completed tasks. Returns number of tasks removed."""
+    """Remove all completed tasks and archive them to history. Returns number of tasks archived."""
     tasks = load_tasks()
-    original_count = len(tasks)
-    tasks = [t for t in tasks if not t.is_completed()]
-    save_tasks(tasks)
-    return original_count - len(tasks)
+    completed = [t for t in tasks if t.is_completed()]
+    remaining = [t for t in tasks if not t.is_completed()]
+    
+    if completed:
+        # Archive completed tasks to history
+        history = load_history()
+        history.extend(completed)
+        save_history(history)
+    
+    save_tasks(remaining)
+    return len(completed)
+
+
+# History functions
+
+def load_history() -> List[Task]:
+    """Load all tasks from the history file."""
+    ensure_storage_exists()
+    
+    try:
+        data = json.loads(DEFAULT_HISTORY_FILE.read_text())
+        return [Task.from_dict(item) for item in data]
+    except (json.JSONDecodeError, KeyError):
+        return []
+
+
+def save_history(tasks: List[Task]) -> None:
+    """Save all tasks to the history file."""
+    ensure_storage_exists()
+    
+    data = [task.to_dict() for task in tasks]
+    DEFAULT_HISTORY_FILE.write_text(json.dumps(data, indent=2))
+
+
+def clear_history() -> int:
+    """Clear all history. Returns number of tasks removed."""
+    history = load_history()
+    count = len(history)
+    DEFAULT_HISTORY_FILE.write_text("[]")
+    return count
 

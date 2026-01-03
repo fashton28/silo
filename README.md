@@ -26,8 +26,9 @@ todo view
 ### Quick Commands
 
 ```bash
-todo create "Buy groceries"    # Add a new task
-todo clear                     # Remove completed tasks
+todo clear                     # Archive completed tasks to history
+todo history                   # View completed task history
+todo history --clear           # Delete all history
 ```
 
 ## Keyboard Shortcuts (in interactive mode)
@@ -44,5 +45,6 @@ todo clear                     # Remove completed tasks
 
 ## Data Storage
 
-Tasks are stored in `~/.todo/tasks.json`.
+- Active tasks: `~/.todo/tasks.json`
+- Completed history: `~/.todo/history.json`
 

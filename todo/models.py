@@ -44,26 +44,8 @@ class Task:
             completed_at=data.get("completed_at"),
         )
     
-    def relative_time(self) -> str:
-        """Get human-readable relative time since creation."""
+    def formatted_date(self) -> str:
+        """Get the creation date formatted as date only."""
         created = datetime.fromisoformat(self.created_at)
-        now = datetime.now()
-        delta = now - created
-        
-        seconds = int(delta.total_seconds())
-        
-        if seconds < 60:
-            return "now"
-        elif seconds < 3600:
-            minutes = seconds // 60
-            return f"{minutes}m"
-        elif seconds < 86400:
-            hours = seconds // 3600
-            return f"{hours}h"
-        elif seconds < 604800:
-            days = seconds // 86400
-            return f"{days}d"
-        else:
-            weeks = seconds // 604800
-            return f"{weeks}w"
+        return created.strftime("%Y-%m-%d")
 

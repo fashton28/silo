@@ -100,11 +100,8 @@ class TaskTable(DataTable):
         return Text("Pending", style="bold yellow")
     
     def _format_created(self, task: Task) -> Text:
-        """Format the created timestamp as relative time."""
-        relative = task.relative_time()
-        if relative == "now":
-            return Text(relative, style="bold cyan")
-        return Text(relative, style="dim")
+        """Format the created timestamp as date."""
+        return Text(task.formatted_date(), style="dim")
     
     def get_selected_task_id(self) -> int | None:
         """Get the ID of the currently selected task."""

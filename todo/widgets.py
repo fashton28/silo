@@ -1,40 +1,9 @@
 """Custom Textual widgets for the Todo app."""
 
 from textual.widgets import Static, DataTable
-from textual.app import ComposeResult
 from rich.text import Text
-from rich.panel import Panel
-from rich.align import Align
 
 from .models import Task
-
-
-ASCII_HEADER = r"""
- ███████╗██╗██╗      ██████╗ 
- ██╔════╝██║██║     ██╔═══██╗
- ███████╗██║██║     ██║   ██║
- ╚════██║██║██║     ██║   ██║
- ███████║██║███████╗╚██████╔╝
- ╚══════╝╚═╝╚══════╝ ╚═════╝ 
-"""
-
-
-class Header(Static):
-    """ASCII art header widget."""
-    
-    DEFAULT_CSS = """
-    Header {
-        height: auto;
-        padding: 0 1;
-        color: #7aa2f7;
-        text-align: center;
-    }
-    """
-    
-    def render(self) -> Text:
-        """Render the ASCII header."""
-        text = Text(ASCII_HEADER, style="bold #7aa2f7")
-        return text
 
 
 class TaskTable(DataTable):

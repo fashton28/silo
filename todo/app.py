@@ -6,7 +6,7 @@ from textual.containers import Container, Vertical
 from textual.binding import Binding
 from textual import events
 
-from .widgets import Header, TaskTable, HelpBar
+from .widgets import TaskTable, HelpBar
 from . import storage
 
 
@@ -55,7 +55,6 @@ class TodoApp(App):
     def compose(self) -> ComposeResult:
         """Compose the app layout."""
         with Vertical(id="main-container"):
-            yield Header()
             yield TaskTable()
             yield Input(placeholder="Enter task title...", id="task-input", classes="hidden")
             yield HelpBar()

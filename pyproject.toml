@@ -1,21 +1,51 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling<1.22"]
 build-backend = "hatchling.build"
 
 [project]
-name = "todo-cli"
+name = "silo-todo"
 version = "0.1.0"
-description = "A terminal-based todo list with vim-style navigation"
+description = "A beautiful terminal-based todo list with vim-style navigation, workspaces, and priorities"
 readme = "README.md"
 requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "fashton"}
+]
+keywords = ["todo", "cli", "terminal", "tui", "productivity", "vim", "textual", "workspace"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Utilities",
+]
 dependencies = [
     "typer[all]>=0.9.0",
     "textual>=0.45.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/fashton/silo-todo"
+Repository = "https://github.com/fashton/silo-todo"
+
 [project.scripts]
-todo = "todo.main:app"
+silo = "todo.main:app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["todo"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build]
+exclude = [
+    "/.github",
+]
 

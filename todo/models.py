@@ -1,4 +1,4 @@
-"""Task data model with JSON serialization."""
+"""Task and Workspace data models with JSON serialization."""
 
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
@@ -7,11 +7,34 @@ import json
 
 
 @dataclass
+class Workspace:
+    """Represents a workspace for organizing tasks."""
+    
+    id: int
+    name: str
+    created_at: str = field(default_factory=lambda: datetime.now().isoformat())
+    
+    def to_dict(self) -> dict:
+        """Convert workspace to dictionary for JSON serialization."""
+        return asdict(self)
+    
+    @classmethod
+    def from_dict(cls, data: dict) -> "Workspace":
+        """Create workspace from dictionary."""
+        return cls(
+            id=data["id"],
+            name=data["name"],
+            created_at=data.get("created_at", datetime.now().isoformat()),
+        )
+
+
+@dataclass
 class Task:
     """Represents a single todo task."""
     
     id: int
     title: str
+    workspace_id: Optional[int] = None  # None means unassigned/legacy task
     status: str = "pending"  # "pending" or "completed"
     created_at: str = field(default_factory=lambda: datetime.now().isoformat())
     completed_at: Optional[str] = None
@@ -47,6 +70,7 @@ class Task:
         return cls(
             id=data["id"],
             title=data["title"],
+            workspace_id=data.get("workspace_id"),
             status=data.get("status", "pending"),
             created_at=data.get("created_at", datetime.now().isoformat()),
             completed_at=data.get("completed_at"),
